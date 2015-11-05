@@ -25,6 +25,16 @@ maxValue = 0
 minValue = 0
 count = 0
 avgTime = 0
+divLine = ""
+for x in range(0,79):
+   divLine = divLine + "-"
+
+# Functions
+def printBlock(message):
+   print ""
+   print divLine
+   print "- " + message
+   print divLine
 
 # Open CSV file and calculate the statistics
 with open(watchdogData, 'rb') as csvfile:
@@ -63,13 +73,7 @@ with open(watchdogData, 'rb') as csvfile:
    avgTime = avgTime / count
 
 # Print out the calculated data
-   tempStr = ""
-   for x in range(0,79):
-      tempStr = tempStr + "-"
-   print ""
-   print tempStr
-   print "- Watchdog Statistics"
-   print tempStr
+   printBlock("Watchdog Statistics")
    for x in range(len(Mpos)):
       print "M" + str(x) + "+  : " + str(Mpos[x])
       print "M" + str(x) + "-  : " + str(Mneg[x])
@@ -79,10 +83,7 @@ with open(watchdogData, 'rb') as csvfile:
    print "CNT  : " + str(count)
 
 # Print out a graph of the data
-   print ""
-   print tempStr
-   print "- Graph"
-   print tempStr
+   printBlock("Graph")
    for i in range(len(Mneg)):
       for x in range(0,(50*Mneg[i]/count)):
          MnegGraph[i] = MnegGraph[i] + graphChar
