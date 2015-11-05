@@ -40,36 +40,21 @@ with open(watchdogData, 'rb') as csvfile:
          maxValue = tJitter
       if tJitter<minValue:
          minValue = tJitter
-      if abs(tJitter)<Mtime[0]:
-         if tJitter >= 0:
-            Mpos[0] = Mpos[0] + 1
-         else:
-            Mneg[0] = Mneg[0] + 1
-      elif abs(tJitter)<Mtime[1]:
-         if tJitter >= 0:
-            Mpos[1] = Mpos[1] + 1
-         else:
-            Mneg[1] = Mneg[1] + 1
-      elif abs(tJitter)<Mtime[2]:
-         if tJitter >= 0:
-            Mpos[2] = Mpos[2] + 1
-         else:
-            Mneg[2] = Mneg[2] + 1
-      elif abs(tJitter)<Mtime[3]:
-         if tJitter >= 0:
-            Mpos[3] = Mpos[3] + 1
-         else:
-            Mneg[3] = Mneg[3] + 1
-      elif abs(tJitter)<Mtime[4]:
-         if tJitter >= 0:
-            Mpos[4] = Mpos[4] + 1
-         else:
-            Mneg[4] = Mneg[4] + 1
-      elif abs(tJitter)>=Mtime[4]:
-         if tJitter >= 0:
-            Mpos[5] = Mpos[5] + 1
-         else:
-            Mneg[5] = Mneg[5] + 1
+      for x in range(len(Mpos)):
+         if (x == (len(Mpos)-1)):
+            if tJitter >=0:
+               Mpos[x] = Mpos[x] + 1
+               break
+            else:
+               Mneg[x] = Mneg[x] + 1
+               break
+         if abs(tJitter)<Mtime[x]:
+            if tJitter >= 0:
+               Mpos[x] = Mpos[x] + 1
+               break
+            else:
+               Mneg[x] = Mneg[x] + 1
+               break
       tDiffStr = '%.3f' % tDiff
       tJitterStr = '%.3f' % tJitter
       count = count + 1
