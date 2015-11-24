@@ -2,7 +2,7 @@
 # Version: 1.00.00 (2015-11-24)
 #
 # Info: This script analyzes a CSV file created by the Logic software from the Saleae Logic Analyzer, and generates
-#       watchdog statistics timing statistics.
+#       watchdog timing statistics.
 import csv
 
 #########################################################################################################################
