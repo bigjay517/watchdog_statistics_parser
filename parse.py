@@ -103,9 +103,9 @@ with open(watchdogData, 'rb') as csvfile:
    for x in range(len(Mpos)):
       print "M" + str(x) + "+  : " + str(Mpos[x])
       print "M" + str(x) + "-  : " + str(Mneg[x])
-   print "MAX  : " + str(maxValue) + " ms"
-   print "MIN  : " + str(minValue) + " ms"
-   print "AVG  : " + str(avgTime) + " ms"
+   print "MAX  : " + str(tTrigger + maxValue) + " ms"
+   print "MIN  : " + str(tTrigger + minValue) + " ms"
+   print "AVG  : " + str(tTrigger + avgTime) + " ms"
    print "CNT  : " + str(count)
 
 # Print out a graph of the data
