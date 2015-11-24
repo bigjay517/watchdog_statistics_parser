@@ -1,4 +1,13 @@
+# Author: Jason Learst, Vector CANtech Inc.
+# Version: 1.00.00 (2015-11-24)
+#
+# Info: This script analyzes a CSV file created by the Logic software from the Saleae Logic Analyzer, and generates
+#       watchdog statistics timing statistics.
 import csv
+
+#########################################################################################################################
+# Configuration
+#########################################################################################################################
 # Configure margins here in ms
 Mtime = (0.005, 0.010, 0.020, 0.050, 0.200)
 
@@ -8,10 +17,12 @@ tTrigger = 1
 # Configure File here
 watchdogData = 'watchdog_testing.csv'
 
-# Graph drawing
+# Character to draw the graph with
 graphChar = "X"
 
-# Initialize vars
+#########################################################################################################################
+# Variables
+#########################################################################################################################
 Mneg = []
 Mpos = []
 MposGraph = []
@@ -29,16 +40,24 @@ divLine = ""
 for x in range(0,79):
    divLine = divLine + "-"
 
+#########################################################################################################################
 # Functions
+#########################################################################################################################
+
+# Output a visual block to the console
 def printBlock(message):
    print ""
    print divLine
    print "- " + message
    print divLine
 
-# Open CSV file and calculate the statistics
+#########################################################################################################################
+# Main
+#########################################################################################################################
+# Open CSV file parse the data
 with open(watchdogData, 'rb') as csvfile:
    wdData = csv.reader(csvfile, delimiter=',', quotechar='|', skipinitialspace='true')
+   # ignore the column headers
    wdData.next()
    wdData.next()
    initialTime = wdData.next()
@@ -46,11 +65,16 @@ with open(watchdogData, 'rb') as csvfile:
    for row in wdData:
       tDiff = (float(row[0])-oldTime)*1000
       tJitter = tDiff-tTrigger
+      # Check for min and max values
       if tJitter>maxValue:
          maxValue = tJitter
       if tJitter<minValue:
          minValue = tJitter
+         # Loop through array of Margins and +1 the bucket this tick belongs to
+         # break once the bucket is updated so same tick does not add to more than one bucket
+         # example 1.15ms 
       for x in range(len(Mpos)):
+         # if we are at last index of Mpos/Mneg, this value goes in the greater than max margin bucket
          if (x == (len(Mpos)-1)):
             if tJitter >=0:
                Mpos[x] = Mpos[x] + 1
@@ -58,6 +82,7 @@ with open(watchdogData, 'rb') as csvfile:
             else:
                Mneg[x] = Mneg[x] + 1
                break
+         # Check if the value is less than the current margin Mtime[x], if yes it belongs in this bucket if not x++
          if abs(tJitter)<Mtime[x]:
             if tJitter >= 0:
                Mpos[x] = Mpos[x] + 1
@@ -67,6 +92,7 @@ with open(watchdogData, 'rb') as csvfile:
                break
       tDiffStr = '%.3f' % tDiff
       tJitterStr = '%.3f' % tJitter
+      # Increment data count and update running AvgTime calculation
       count = count + 1
       avgTime = avgTime + tJitter
       oldTime=float(row[0])
@@ -84,11 +110,13 @@ with open(watchdogData, 'rb') as csvfile:
 
 # Print out a graph of the data
    printBlock("Graph")
+   # Generate the graph data by using the % of counts in each bucket
    for i in range(len(Mneg)):
       for x in range(0,(50*Mneg[i]/count)):
          MnegGraph[i] = MnegGraph[i] + graphChar
       for x in range(0,(50*Mpos[i]/count)):
          MposGraph[i] = MposGraph[i] + graphChar
+   # Print the data in order from early calls to late calls of WDTrigger
    for x in reversed(range(len(MnegGraph))):
       print "M" + str(x) + "-  : " + MnegGraph[x]
    for x in range(len(MnegGraph)):
