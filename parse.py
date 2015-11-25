@@ -72,7 +72,6 @@ with open(watchdogData, 'rb') as csvfile:
          minValue = tJitter
          # Loop through array of Margins and +1 the bucket this tick belongs to
          # break once the bucket is updated so same tick does not add to more than one bucket
-         # example 1.15ms 
       for x in range(len(Mpos)):
          # if we are at last index of Mpos/Mneg, this value goes in the greater than max margin bucket
          if (x == (len(Mpos)-1)):
